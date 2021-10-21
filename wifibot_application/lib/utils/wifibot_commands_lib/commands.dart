@@ -1,20 +1,24 @@
 
 import 'dart:typed_data';
 
-enum direction {
-  FORWARD,
-  BACKWARD,
-  CLOCKIWISE,
-  ANTICLOCKWISE,
+/// Enum [Direction] tells the robot which direction to go to.
+enum Direction {
+  forward,
+  backward,
+  clockwise,
+  anticlockwise,
 }
 
-/// Class to change the parameters of the data to send (=commands)
+/// Class to determine which data to send to send (=commands).
 class Commands{
 
   static const int lengthCommandTCP = 7;
   // 2 bytes for CRC
   static const int lengthCommandUDP = 9;
+
   final Uint8List _commandPacket = Uint8List(lengthCommandTCP);
+
+  Uint8List get commandPacket => _commandPacket;
 
   static const int _upperLimitSpeed = 240;
 
@@ -22,10 +26,11 @@ class Commands{
     _commandPacket[0] = 255;
     _commandPacket[1] = lengthCommandTCP;
 
-    // TODO UPDATE CRC IN CASE WE USE UDP
+    // TODO UPDATE CRC IN CASE WE USE UDP - AND THE LIBRARY ONLY SUPPORTS TCP
   }
 
-  void setAction(int rightSpeed, int leftSpeed, direction dir){
+  /// Change
+  void setAction(int rightSpeed, int leftSpeed, Direction dir){
     setRightSpeed(rightSpeed);
     setLeftSpeed(leftSpeed);
     setDirection(dir);
@@ -53,18 +58,18 @@ class Commands{
     _commandPacket[5] = 0;
   }
 
-  void setDirection(direction dir){
+  void setDirection(Direction dir){
     switch(dir){
-      case direction.FORWARD:
+      case Direction.forward:
         _commandPacket[6] = 80;
         break;
-      case direction.BACKWARD:
+      case Direction.backward:
         _commandPacket[6] = 2;
         break;
-      case direction.ANTICLOCKWISE:
+      case Direction.anticlockwise:
         _commandPacket[6] = 62;
         break;
-      case direction.CLOCKIWISE:
+      case Direction.clockwise:
         _commandPacket[6] = 80;
         break;
     }

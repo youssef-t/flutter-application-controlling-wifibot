@@ -6,19 +6,42 @@ class DataWifibot{
 
   // The robot sends packets with 21 characters
   static const int lengthRawDataPacket = 21;
-  // Variable to store the packet with 21 characters
+  /// Variable to store the packet with 21 characters
   Uint8List _rawDataPacket = Uint8List(lengthRawDataPacket);
+  /// Variable to store all the data related to the state of the robot
+  var _dataWifibotMap = Map();
 
+  // Default constructor
+
+  DataWifibot.withoutRawDataPacket();
+  DataWifibot(this._rawDataPacket){
+    _dataWifibotMap = {
+      'left_speed': getLeftSpeed(),
+      'right_speed': getRightSpeed(),
+      'battery': getBattery(),
+      'getIR_LF': getIR_LF(),
+      'getIR_LB': getIR_LB(),
+      'getIR_RF': getIR_RF(),
+      'getIR_RB': getIR_RB()
+    };
+  }
 
   Uint8List get rawDataPacket => _rawDataPacket;
 
-  DataWifibot.withoutRawDataPacket();
-
-  DataWifibot(this._rawDataPacket);
-
   set rawDataPacket(Uint8List value) {
     _rawDataPacket = value;
+    _dataWifibotMap = {
+      'left_speed': getLeftSpeed(),
+      'right_speed': getRightSpeed(),
+      'battery': getBattery(),
+      'getIR_LF': getIR_LF(),
+      'getIR_LB': getIR_LB(),
+      'getIR_RF': getIR_RF(),
+      'getIR_RB': getIR_RB()
+    };
   }
+
+
 
   double getRightSpeed() {
     int rightSpeed = (_rawDataPacket[10] << 8) + rawDataPacket[9];
