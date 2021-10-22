@@ -8,12 +8,15 @@ class DataWifibot{
   static const int lengthRawDataPacket = 21;
   /// Variable to store the packet with 21 characters
   Uint8List _rawDataPacket = Uint8List(lengthRawDataPacket);
+  Uint8List get rawDataPacket => _rawDataPacket;
+
   /// Variable to store all the data related to the state of the robot
   var _dataWifibotMap = Map();
+  get dataWifibotMap => _dataWifibotMap;
 
   // Default constructor
-
   DataWifibot.withoutRawDataPacket();
+
   DataWifibot(this._rawDataPacket){
     _dataWifibotMap = {
       'left_speed': getLeftSpeed(),
@@ -26,7 +29,9 @@ class DataWifibot{
     };
   }
 
-  Uint8List get rawDataPacket => _rawDataPacket;
+  DataWifibot.withRawDataPacketString(String rawDataPacket){
+    DataWifibot(Uint8List.fromList(rawDataPacket.codeUnits));
+  }
 
   set rawDataPacket(Uint8List value) {
     _rawDataPacket = value;
@@ -40,7 +45,6 @@ class DataWifibot{
       'getIR_RB': getIR_RB()
     };
   }
-
 
 
   double getRightSpeed() {
