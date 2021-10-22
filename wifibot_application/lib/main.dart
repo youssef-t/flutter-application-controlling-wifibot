@@ -12,13 +12,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Welcome to Flutter',
+      title: 'Welcome to the Wifibot controller App',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Welcome to Flutter'),
+          title: const Text('Welcome to the Wifibot controller App'),
         ),
         body: const Center(
-          child: Text('Hello World'),
+          child: Text('WIFIBOT'),
         ),
       ),
     );
