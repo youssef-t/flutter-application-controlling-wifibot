@@ -47,17 +47,11 @@ class _HomePageState extends State<HomePage> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
 
-    print("screenHeight : $screenHeight");
-    print("screenWidth: $screenWidth");
-
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-            child: Text(
-          "Wifibot Controller",
-        ),
-        ),
+        title: Text("Wifibot Controller"),
         actions: const [
+          // TODO add a function to create a route for the settings page
           IconButton(onPressed: null, icon: Icon(Icons.settings, color: Colors.black,) )
         ],
       ),
@@ -65,12 +59,12 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
           child: ElevatedButton(
+            // TODO add a function to create a route for the controller page
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 50), // double.infinity is the width and 30 is the height
+              minimumSize: Size(double.infinity, 50), // double.infinity is the width and 50 is the height
             ),
             child: Text("Controller", style: textButtonStyle, ),
-
 
           ),
         ),
