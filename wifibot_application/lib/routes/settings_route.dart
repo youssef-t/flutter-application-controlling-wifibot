@@ -23,13 +23,3 @@ class SettingsRoute extends StatelessWidget {
     );
   }
 }
-
-// TODO to define
-void settingsIconButtonPushed() {
-
-}
-
-// TODO to define
-void controllerButtonPushed() {
-
-}
