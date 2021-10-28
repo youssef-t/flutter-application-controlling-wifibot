@@ -1,8 +1,10 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:wifibot_application/routes/controller_route.dart';
+import 'package:wifibot_application/routes/home_route.dart';
+import 'package:wifibot_application/routes/settings_route.dart';
+
 
 // Variable to store the width of the screen
 double? screenWidth;
@@ -24,6 +26,20 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
       ),
       home: HomePage(),
+      // TODO Define the routes
+      // Start the app with the "/" named route. In this case, the app starts
+      // on the Home widget.
+      /*
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the Home widget.
+        '/': (context) => HomeRoute(),
+        // When navigating to the "/settings" route, build the SettingsRoute widget.
+        '/settings': (context) => SettingsRoute(),
+        // When navigating to the "/controller" route, build the ControllerRoute widget.
+        '/controller': (context) => ControllerRoute(),
+      },
+      */
     );
   }
 }
@@ -50,9 +66,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Wifibot Controller"),
-        actions: const [
+        actions: [
           // TODO add a function to create a route for the settings page
-          IconButton(onPressed: null, icon: Icon(Icons.settings, color: Colors.black,) )
+          IconButton(onPressed: controllerButtonPushed, icon: Icon(Icons.settings, color: Colors.black,) )
         ],
       ),
       body: Center(
@@ -60,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           margin: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
           child: ElevatedButton(
             // TODO add a function to create a route for the controller page
-            onPressed: () {},
+            onPressed: controllerButtonPushed,
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 50), // double.infinity is the width and 50 is the height
             ),
@@ -70,5 +86,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+  // Flutter
+  
+
+  /// Load the controller page when the button "controller" is pushed
+  void controllerButtonPushed() async{
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+      return ControllerRoute();
+    }));
   }
 }
