@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:joystick/joystick.dart';
 
 class ControllerRoute extends StatelessWidget {
   @override
@@ -12,10 +13,24 @@ class ControllerRoute extends StatelessWidget {
     ]);
     */
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Controller page"),
-      ),
+    return Stack(
+      children: [
+        // placeholder for game
+        Container(
+          color: Colors.purple,
+        ),
+
+        Container(
+          decoration: FlutterLogoDecoration(
+          ),
+          child: Joystick(size: 100,
+            isDraggable: true,
+            iconColor: Colors.amber,
+            backgroundColor: Colors.black,
+            opacity: 0.5,
+            joystickMode: JoystickModes.horizontal,),
+        ),
+      ],
     );
   }
 }
