@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:wifibot_application/CustomWidgets/settings_form.dart';
+import 'package:wifibot_application/custom_widgets/settings_form.dart';
 
 /// Class that represents the settings page of our app
 class SettingsRoute extends StatelessWidget {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../route_generator.dart';
+
 // Defining the style of the buttons
 const fontSizeButton = 30.0;
 const textButtonStyle = TextStyle(
@@ -8,7 +10,7 @@ const textButtonStyle = TextStyle(
 
 /// Class that represents the first page of our app
 class HomeRoute extends StatelessWidget {
-
+  const HomeRoute({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class HomeRoute extends StatelessWidget {
           IconButton(
               // Go to the settings route
               onPressed: () {
-                Navigator.pushNamed(context, '/settings');
+                Navigator.pushNamed(context, AppRoutes.settings);
               },
               icon: Icon(
                 Icons.settings,
@@ -33,7 +35,7 @@ class HomeRoute extends StatelessWidget {
           child: ElevatedButton(
             // Go the controller route
             onPressed: () {
-              Navigator.pushNamed(context, '/controller');
+              Navigator.pushNamed(context, AppRoutes.controller);
             },
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity,
