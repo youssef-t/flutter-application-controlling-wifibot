@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:joystick/joystick.dart';
+import 'package:wifibot_application/custom_widgets/joypad.dart';
 
 class ControllerRoute extends StatelessWidget {
   @override
@@ -14,22 +14,26 @@ class ControllerRoute extends StatelessWidget {
     */
 
     return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
-        // placeholder for game
         Container(
-          color: Colors.purple,
+          color: Colors.blue,
         ),
 
-        Container(
-          decoration: FlutterLogoDecoration(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: ),
+          child: Row(
+            children: [
+              SizedBox(
+                  height: 130,
+                  width: 130,
+                  child: FittedBox(
+                    child: Joypad(),
+                  )
+              ),
+            ],
           ),
-          child: Joystick(size: 100,
-            isDraggable: true,
-            iconColor: Colors.amber,
-            backgroundColor: Colors.black,
-            opacity: 0.5,
-            joystickMode: JoystickModes.horizontal,),
-        ),
+        )
       ],
     );
   }
