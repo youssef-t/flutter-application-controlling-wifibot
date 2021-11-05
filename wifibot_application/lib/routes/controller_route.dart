@@ -21,7 +21,7 @@ class ControllerRoute extends StatelessWidget {
         ),
 
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: ),
+          padding: const EdgeInsets.all(40.0),
           child: Row(
             children: [
               SizedBox(
