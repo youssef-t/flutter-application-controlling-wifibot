@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:wifibot_application/routes/controller_route.dart';
 import 'package:wifibot_application/routes/home_route.dart';
 import 'package:wifibot_application/routes/settings_route.dart';
+import 'package:wifibot_application/routes/test_communication.dart';
 import 'package:wifibot_application/utils/orientation_helpers.dart';
 
 // Class that defines the routes with their corresponding path
@@ -21,7 +22,7 @@ class RouteGenerator {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
             overlays: []);
         return MaterialPageRoute(
-          builder: (_) => HomeRoute(),
+          builder: (_) => TestCommunication(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
       case AppRoutes.settings:

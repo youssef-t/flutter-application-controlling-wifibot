@@ -4,32 +4,27 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
+import 'package:wifibot_application/utils/wifibot_commands_lib/constants_wifibot.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/data_wifibot.dart';
 
 ///  Class to manage the TCP connection  with the Wifibot.
 class ConnectionTCP {
+
   Socket? _socketWifiBot;
 
-  //TODO change the IP address
-  String _wifiBotIPAddress = "127.0.0.1";
-  final int _tcpPortWifibot = 15020;
-
   static bool _wifibotIsConnected = false;
-
-
-   /// Timeout duration in seconds.
-  final int _timeoutDuration = 10;
 
   /// Variable used to know if the data request is accepted
   bool dataRequestingIsInitialized = false;
 
   ConnectionTCP();
 
-  Future<void> connect() async {
+  /// Method to connect to the wifibot using TCP
+  Future<void> connect({String wifiBotIPAddress = WifibotConstants.wifiBotIPAddressDefault, int wifiBotTCPPort = WifibotConstants.tcpPortWifibotDefault, int timeoutDuration = WifibotConstants.timeoutDurationTCPDefault}) async {
     try {
       print("Starting the connection");
-      _socketWifiBot = await Socket.connect(_wifiBotIPAddress, _tcpPortWifibot)
-          .timeout(Duration(seconds: _timeoutDuration))
+      _socketWifiBot = await Socket.connect(wifiBotIPAddress, wifiBotTCPPort)
+          .timeout(Duration(seconds: timeoutDuration))
           .whenComplete(() => _wifibotIsConnected = true);
     } on SocketException catch (e, s) {
       print('SocketException: $e, \n Trace: $s');
@@ -42,6 +37,7 @@ class ConnectionTCP {
     _wifibotIsConnected ? print("Connected") : print("NOT CONNECTED");
   }
 
+  /// Method to send a command to the wifibot after the connection
   void send(String commandString)  {
     if (_wifibotIsConnected) {
       _socketWifiBot?.add(utf8.encode(commandString));
@@ -98,6 +94,7 @@ class ConnectionTCP {
     return dataWifibotMap;
   }
 
+  /// Close the TCP connection
   void disconnect() {
     if (_wifibotIsConnected) {
       _socketWifiBot?.close();
