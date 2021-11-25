@@ -19,25 +19,28 @@ class _SettingsFormState extends State<SettingsForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _formKey,
-        child: Column(
-          // TODO Add the necessary settings fields
-          children: <Widget>[
-            // Widget to represent the text field for the IP adress
-            TextFormField(
-              // The validator receives the text that the user has entered.
-              // In our case, it's an IP adress field
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a valid IP adress';
-                }
-                return null;
-              },
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Form(
+          key: _formKey,
+          child: Column(
+            // TODO Add the necessary settings fields
+            children: <Widget>[
+              // Widget to represent the text field for the IP adress
+              TextFormField(
+                // The validator receives the text that the user has entered.
+                // In our case, it's an IP adress field
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a valid IP adress';
+                  }
+                  return null;
+                },
 
-            ),
-          ],
-        ));
+              ),
+            ],
+          )),
+    );
   }
 }
 

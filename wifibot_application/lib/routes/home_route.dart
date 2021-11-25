@@ -29,21 +29,46 @@ class HomeRoute extends StatelessWidget {
               ))
         ],
       ),
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
-          child: ElevatedButton(
-            // Go the controller route
-            onPressed: () {
-              Navigator.pushNamed(context, AppRoutes.controller);
-            },
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity,
-                  50), // double.infinity is the width and 50 is the height
-            ),
-            child: Text(
-              "Controller",
-              style: textButtonStyle,
+      body: Container(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Spacer(),
+                ElevatedButton(
+                  // Go the controller route
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.controller);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity,
+                        50), // double.infinity is the width and 50 is the height
+                  ),
+                  child: Text(
+                    "Controller",
+                    style: textButtonStyle,
+                  ),
+                ),
+                Spacer(),
+                ElevatedButton(
+                  // Go the controller route
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.testCommunication);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity,
+                        50), // double.infinity is the width and 50 is the height
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Test Communication",
+                    ),
+                  ),
+                ),
+                Spacer(),
+              ],
             ),
           ),
         ),
@@ -51,5 +76,3 @@ class HomeRoute extends StatelessWidget {
     );
   }
 }
-
-

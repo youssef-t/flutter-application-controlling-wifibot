@@ -11,6 +11,7 @@ class AppRoutes {
   static const home = '/';
   static const settings = '/settings';
   static const controller = '/controller';
+  static const testCommunication = '/testCommunication';
 }
 
 // TODO Correcting the display with SystemChrome.setEnabledSystemUIMode
@@ -22,7 +23,7 @@ class RouteGenerator {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
             overlays: []);
         return MaterialPageRoute(
-          builder: (_) => TestCommunication(),
+          builder: (_) => HomeRoute(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
       case AppRoutes.settings:
@@ -38,6 +39,13 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (_) => ControllerRoute(),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+        );
+      case AppRoutes.testCommunication:
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+            overlays: []);
+        return MaterialPageRoute(
+          builder: (_) => TestCommunication(),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
 
       default:
