@@ -15,7 +15,9 @@ class ConnectionTCP {
   static bool _wifibotIsConnected = false;
 
   /// Variable used to know if the data request is accepted
-  bool dataRequestingIsInitialized = false;
+  bool _dataRequestingIsInitialized = false;
+
+  bool get dataRequestingIsInitialized => _dataRequestingIsInitialized;
 
   ConnectionTCP();
 
@@ -47,7 +49,8 @@ class ConnectionTCP {
     }
   }
 
-  String receive() {
+  /// Method to get a stream of the messages sent by the wifibot
+  Stream<String> receive() async* {
     String wifiBotResponse = "";
     if (_wifibotIsConnected) {
       _socketWifiBot?.listen((Uint8List data) {
@@ -57,22 +60,28 @@ class ConnectionTCP {
     } else {
       print("NOT CONNECTED - receive method");
     }
-    return wifiBotResponse;
+    yield wifiBotResponse;
   }
 
-  /// Request data from the robot
-  Map? receiveDataWifiBot() {
+  /// Method to request data from the robot and to get a stream of maps
+  /// containing the data sent by the wifibot
+  Stream<Map> receiveDataWifiBot() async* {
 
-    Map? dataWifibotMap;
+    Map dataWifibotMap = {};
 
+    // Verify of the wifibot is connected.
     if (_wifibotIsConnected) {
-      // We need to send the message "init" at first.
-      if(!dataRequestingIsInitialized){
+      // First, we need to send the message "init"
+      if(!_dataRequestingIsInitialized){
         send("init");
-        String response = receive();
-        // Then the robot should respond once with "OK".
+        String response = "";
+        // Get the response of the wifibot
+        receive().listen((messageByWifibot) {
+          response = messageByWifibot;
+        });
+        // Then the robot should respond once with "ok".
         if(response == "ok"){
-          dataRequestingIsInitialized = true;
+          _dataRequestingIsInitialized = true;
         } else {
           print("WARNING - OK NOT RECEIVED");
         }
@@ -80,9 +89,12 @@ class ConnectionTCP {
       }
 
       // Then we request the data
-      if(dataRequestingIsInitialized){
+      if(_dataRequestingIsInitialized){
         send("data");
-        String rawDataString = receive();
+        String rawDataString = "";
+        receive().listen((messageByWifibot) {
+          rawDataString = messageByWifibot;
+        });
         DataWifibot dataWifibot = DataWifibot.withRawDataPacketString(rawDataString);
         dataWifibotMap = dataWifibot.dataWifibotMap;
       }
@@ -91,7 +103,7 @@ class ConnectionTCP {
       print("NOT CONNECTED - receiveDataWifiBot");
     }
 
-    return dataWifibotMap;
+    yield dataWifibotMap;
   }
 
   /// Close the TCP connection
@@ -99,10 +111,11 @@ class ConnectionTCP {
     if (_wifibotIsConnected) {
       _socketWifiBot?.close();
       _wifibotIsConnected = false;
-      dataRequestingIsInitialized = false;
+      _dataRequestingIsInitialized = false;
       print("Disconnected");
     } else {
       print("wifibot is already disconnected - disconnect method");
     }
+
   }
 }
