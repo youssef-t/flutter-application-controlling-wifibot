@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       // Start the app with the "/" named route. In this case, the app starts
       // on the Home widget.
-      initialRoute: '/',
+      initialRoute: AppRoutes.testCommunication,
       onGenerateRoute: RouteGenerator.generateRoute,
       navigatorObservers: [_observer],
 

@@ -23,7 +23,7 @@ class HomeRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.settings);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.settings,
                 color: Colors.black,
               ))
@@ -43,31 +43,31 @@ class HomeRoute extends StatelessWidget {
                     Navigator.pushNamed(context, AppRoutes.controller);
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity,
+                    minimumSize: const Size(double.infinity,
                         50), // double.infinity is the width and 50 is the height
                   ),
-                  child: Text(
+                  child: const Text(
                     "Controller",
                     style: textButtonStyle,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 ElevatedButton(
                   // Go the controller route
                   onPressed: () {
                     Navigator.pushNamed(context, AppRoutes.testCommunication);
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity,
+                    minimumSize: const Size(double.infinity,
                         50), // double.infinity is the width and 50 is the height
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "Test Communication",
                     ),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),

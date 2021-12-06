@@ -26,6 +26,11 @@ class Commands {
     _commandPacket[0] = 255;
     _commandPacket[1] = lengthCommandTCP;
 
+    setRightSpeed(10);
+    setLeftSpeed(10);
+    setDirection(Direction.forward);
+
+
     // TODO UPDATE CRC IN CASE WE USE UDP - AND THE LIBRARY ONLY SUPPORTS TCP
   }
 
@@ -68,7 +73,7 @@ class Commands {
         _commandPacket[6] = 62;
         break;
       case Direction.clockwise:
-        _commandPacket[6] = 80;
+        _commandPacket[6] = 66;
         break;
     }
   }

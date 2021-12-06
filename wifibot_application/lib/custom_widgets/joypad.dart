@@ -10,9 +10,9 @@ class _JoypadState extends State<Joypad> {
   @override
   Widget build(BuildContext context) {
     return Joystick(
-      period: Duration(milliseconds: 500),
+      period: const Duration(milliseconds: 500),
       mode: JoystickMode.all,
-      base: JoystickBase(mode: JoystickMode.all),
+      base: const JoystickBase(mode: JoystickMode.all),
       stickOffsetCalculator: const CircleStickOffsetCalculator(),
       listener: (details) {
     setState(() {
