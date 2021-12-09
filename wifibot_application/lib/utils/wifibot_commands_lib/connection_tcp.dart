@@ -140,22 +140,23 @@ class ConnectionTCP {
       _stopGettingDataFromWifiBot = false;
     }
 
-    while (!_stopGettingDataFromWifiBot) {
-      if (_dataRequestingIsInitialized) {
+    if (_dataRequestingIsInitialized) {
+      // Adding the data to the stream containing the Data related to the wifibot
+      _socketWifiBotBroadcastStream?.listen((lastMessageByWifibot) {
+        print(
+            "IN gettingDataFromWifibot - lastMessageByWifibot: ${String.fromCharCodes(lastMessageByWifibot)}");
+        DataWifibot dataWifibot = DataWifibot(lastMessageByWifibot);
+        _streamDataWifibotController.add(dataWifibot);
+        dataWifibot.showData();
+      });
+      while (!_stopGettingDataFromWifiBot) {
         // send "data" so that the wifibot sends back a packet containing information about it
         send("data");
-        _socketWifiBotBroadcastStream?.last.then((lastMessageByWifibot) {
-          print(
-              "IN gettingDataFromWifibot - lastMessageByWifibot: ${String.fromCharCodes(lastMessageByWifibot)}");
-          DataWifibot dataWifibot = DataWifibot(lastMessageByWifibot);
-          _streamDataWifibotController.add(dataWifibot.dataWifibotMap);
-        });
-      } else {
-        print("data requesting is not initialized");
+        await Future.delayed(
+            Duration(milliseconds: intervalMillisecondsForRequestingData));
       }
-
-      await Future.delayed(
-          Duration(milliseconds: intervalMillisecondsForRequestingData));
+    } else {
+      print("data requesting is not initialized");
     }
   }
 

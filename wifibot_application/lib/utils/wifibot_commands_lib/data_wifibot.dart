@@ -56,7 +56,7 @@ class DataWifibot{
 
 
   double? getRightSpeed() {
-    if (_lengthRawDataPacketReceived == 0) return null;
+    if (!_isDataValid()) return null;
     int rightSpeed = (_rawDataPacket[10] << 8) + rawDataPacket[9];
     if(rightSpeed > 32767) {
       rightSpeed -= 65536;
@@ -65,29 +65,34 @@ class DataWifibot{
   }
 
   double? getLeftSpeed() {
-    if (_lengthRawDataPacketReceived == 0) return null;
+    if (!_isDataValid()) return null;
     int leftSpeed = (_rawDataPacket[1] << 8) + rawDataPacket[0];
     if(leftSpeed > 32767) {
       leftSpeed -= 65536;
     }
     return leftSpeed*100.0/400.0;
   }
-  int? getBattery() => _lengthRawDataPacketReceived == 0 ? null:rawDataPacket[2];
-  int? getIR_LF() => _lengthRawDataPacketReceived == 0 ? null:rawDataPacket[3];
-  int? getIR_LB() => _lengthRawDataPacketReceived == 0 ? null:rawDataPacket[4];
-  int? getIR_RF() => _lengthRawDataPacketReceived == 0 ? null:rawDataPacket[12];
-  int? getIR_RB() => _lengthRawDataPacketReceived == 0 ? null:rawDataPacket[11];
+  int? getBattery() => _isDataValid() ? null:rawDataPacket[2];
+  int? getIR_LF() => _isDataValid() ? null:rawDataPacket[3];
+  int? getIR_LB() => _isDataValid() ? null:rawDataPacket[4];
+  int? getIR_RF() => _isDataValid() ? null:rawDataPacket[12];
+  int? getIR_RB() => _isDataValid() ? null:rawDataPacket[11];
 
-  int? getOdometryL() => _lengthRawDataPacketReceived == 0 ? null:(rawDataPacket[8] << 24)+(rawDataPacket[7] << 16)
+  int? getOdometryL() => _isDataValid() ? null:(rawDataPacket[8] << 24)+(rawDataPacket[7] << 16)
       +(rawDataPacket[6] << 8)+rawDataPacket[5];
-  int? getOdometryR() => _lengthRawDataPacketReceived == 0 ? null:(rawDataPacket[16] << 24)+(rawDataPacket[15] << 16)
+  int? getOdometryR() => _isDataValid() ? null:(rawDataPacket[16] << 24)+(rawDataPacket[15] << 16)
       +(rawDataPacket[14] << 8)+rawDataPacket[13];
 
   void showData() {
-    print("Batterie: $getBattery()");
+    print("leftSpeed: ${getLeftSpeed()}");
+    print("rightSpeed: ${getRightSpeed()}");
+    print("Batterie: ${getBattery()}");
     print("LB: ${getIR_LB()} ");
     print("LF: ${getIR_LF()}");
     print("RB: ${getIR_RB()}");
     print("RF: ${getIR_RF()}");
   }
+
+  /// Verify if the data are in a valid format
+  bool _isDataValid() => _lengthRawDataPacketReceived==lengthRawDataPacket ? true : false;
 }

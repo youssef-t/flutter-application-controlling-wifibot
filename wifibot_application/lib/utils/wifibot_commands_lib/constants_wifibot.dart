@@ -15,6 +15,7 @@ class WifibotConstants {
   /// Timeout duration in seconds for TCP.
   static const int timeoutDurationTCPDefault = 10;
 
+  // TODO Change interval
   /// The interval for sending the packet "data" in order to get information from wifibot
-  static const int intervalMillisecondsForRequestingData = 500;
+  static const int intervalMillisecondsForRequestingData = 2000;
 }
