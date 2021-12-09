@@ -47,7 +47,7 @@ class _TestCommunicationState extends State<TestCommunication> {
             final text = _controller.text;
             _sendMessage(text);
           },
-          child: Text('Send'),
+          child: const Text('Send'),
         ),
         const Spacer(),
         ElevatedButton(
@@ -61,6 +61,21 @@ class _TestCommunicationState extends State<TestCommunication> {
           },
           child: Text('Connect'),
         ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: () {
+            _conn.initializeDataRequestingFromWifibot();
+          },
+          child: Text('Initialize data requesting'),
+        ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: () {
+            _conn.gettingDataFromWifiBot();
+          },
+          child: Text('Getting data from wifibot'),
+        ),
+        const Spacer(),
         const Spacer(),
         ElevatedButton(
           onPressed: () {
@@ -107,7 +122,7 @@ class _TestCommunicationState extends State<TestCommunication> {
   }
 
   void _sendMessage(String text) {
-    _conn.send('$text\n');
+    _conn.send(text);
   }
 
   @override
