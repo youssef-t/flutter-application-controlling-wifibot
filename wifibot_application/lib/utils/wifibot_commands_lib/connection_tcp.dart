@@ -27,16 +27,14 @@ class ConnectionTCP {
   StreamController<DataWifibot> get streamDataWifibotController =>
       _streamDataWifibotController;
 
-  Stream<String>? get streamMessage => _streamMessagesController.stream;
-
   static bool _wifibotIsConnected = false;
-
-  /// Variable used to stop getting data from wifibot
-  static bool _stopGettingDataFromWifiBot = false;
 
   /// Variable used to know if the data request is accepted
   static bool _dataRequestingIsInitialized = false;
   bool get dataRequestingIsInitialized => _dataRequestingIsInitialized;
+
+  /// Variable used to stop getting data from wifibot
+  static bool _stopGettingDataFromWifiBot = false;
 
   ConnectionTCP(
       {String wifiBotIPAddress = WifibotConstants.wifiBotIPAddressDefault,
@@ -63,7 +61,7 @@ class ConnectionTCP {
       await Socket.connect(wifiBotIPAddress, wifiBotTCPPort)
           .timeout(Duration(seconds: timeoutDuration))
           .then((socket) {
-        initializeStreamsAndSocketWhenConnected(socket);
+        _initializeStreamsAndSocket(socket);
       });
     } on SocketException catch (e, s) {
       print('SocketException: $e, \n Trace: $s');
@@ -77,7 +75,7 @@ class ConnectionTCP {
   }
 
   /// Method to call when the connection is successful
-  void initializeStreamsAndSocketWhenConnected(Socket socket) {
+  void _initializeStreamsAndSocket(Socket socket) {
     _socketWifiBot = socket;
     _socketWifiBotBroadcastStream = socket.asBroadcastStream();
     print("_socketBroadcast: ${_socketWifiBotBroadcastStream?.isBroadcast}");
@@ -106,7 +104,6 @@ class ConnectionTCP {
   /// Initialize data requesting from wifibot by sending "init" and then we wait to receive as a response "ok"
   Future<void> initializeDataRequestingFromWifibot() async {
     // Then we proceed to resquest data from wifibot
-    if (_wifibotIsConnected) {
       // First, we need to send the message "init"
       if (!_dataRequestingIsInitialized) {
         await send("init");
@@ -127,7 +124,7 @@ class ConnectionTCP {
           }
         });
       }
-    }
+
   }
 
   /// We request the data periodically each [intervalMillisecondsForRequestingData].
@@ -165,7 +162,7 @@ class ConnectionTCP {
   }
 
   /// Close the TCP connection
-  void disconnect() {
+  void close() {
     if (_wifibotIsConnected) {
       _socketWifiBot?.close();
       _streamMessagesController.close();
@@ -174,9 +171,9 @@ class ConnectionTCP {
 
       _wifibotIsConnected = false;
       _dataRequestingIsInitialized = false;
-      print("Disconnected");
+      print("TCP - closed");
     } else {
-      print("wifibot is already disconnected - disconnect method");
+      print("wifibot is already disconnected - close method");
     }
   }
 }

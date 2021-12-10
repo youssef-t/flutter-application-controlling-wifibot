@@ -72,15 +72,15 @@ class DataWifibot{
     }
     return leftSpeed*100.0/400.0;
   }
-  int? getBattery() => _isDataValid() ? null:rawDataPacket[2];
-  int? getIR_LF() => _isDataValid() ? null:rawDataPacket[3];
-  int? getIR_LB() => _isDataValid() ? null:rawDataPacket[4];
-  int? getIR_RF() => _isDataValid() ? null:rawDataPacket[12];
-  int? getIR_RB() => _isDataValid() ? null:rawDataPacket[11];
+  int? getBattery() => !_isDataValid() ? null:rawDataPacket[2];
+  int? getIR_LF() => !_isDataValid() ? null:rawDataPacket[3];
+  int? getIR_LB() => !_isDataValid() ? null:rawDataPacket[4];
+  int? getIR_RF() => !_isDataValid() ? null:rawDataPacket[12];
+  int? getIR_RB() => !_isDataValid() ? null:rawDataPacket[11];
 
-  int? getOdometryL() => _isDataValid() ? null:(rawDataPacket[8] << 24)+(rawDataPacket[7] << 16)
+  int? getOdometryL() => !_isDataValid() ? null:(rawDataPacket[8] << 24)+(rawDataPacket[7] << 16)
       +(rawDataPacket[6] << 8)+rawDataPacket[5];
-  int? getOdometryR() => _isDataValid() ? null:(rawDataPacket[16] << 24)+(rawDataPacket[15] << 16)
+  int? getOdometryR() => !_isDataValid() ? null:(rawDataPacket[16] << 24)+(rawDataPacket[15] << 16)
       +(rawDataPacket[14] << 8)+rawDataPacket[13];
 
   void showData() {

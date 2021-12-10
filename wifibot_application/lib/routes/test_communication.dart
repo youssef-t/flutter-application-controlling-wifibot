@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection_tcp.dart';
+import 'package:wifibot_application/utils/wifibot_commands_lib/connection_udp.dart';
 
 class TestCommunication extends StatefulWidget {
   @override
@@ -11,7 +12,8 @@ class TestCommunication extends StatefulWidget {
 }
 
 class _TestCommunicationState extends State<TestCommunication> {
-  late ConnectionTCP _conn;
+  //late ConnectionTCP _conn;
+  late ConnectionUDP _conn;
   var _input = '';
   final _controller = TextEditingController();
   @override
@@ -27,8 +29,9 @@ class _TestCommunicationState extends State<TestCommunication> {
   @override
   void initState() {
     super.initState();
-    _conn = ConnectionTCP();
-    _conn.connect();
+    //_conn = ConnectionTCP();
+    _conn = ConnectionUDP();
+    _conn.initializeStreamsAndSockets();
   }
 
   Widget _buildBody() {
@@ -52,7 +55,8 @@ class _TestCommunicationState extends State<TestCommunication> {
         const Spacer(),
         ElevatedButton(
           onPressed: () {
-            _conn.connect();
+            _conn.initializeStreamsAndSockets();
+            //_conn.connect();
             final text = _controller.text;
             setState(() {
               _input = text;
@@ -79,7 +83,7 @@ class _TestCommunicationState extends State<TestCommunication> {
         const Spacer(),
         ElevatedButton(
           onPressed: () {
-            _conn.disconnect();
+            _conn.close();
           },
           child: Text('Disconnect'),
         ),
@@ -96,7 +100,7 @@ class _TestCommunicationState extends State<TestCommunication> {
           height: 50,
           color: Colors.black12,
           child: StreamBuilder<String>(
-            stream: _conn.streamMessage,
+            stream: _conn.streamMessagesController?.stream,
             initialData: "NOTHING",
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               debugPrint(snapshot.data);
@@ -128,7 +132,7 @@ class _TestCommunicationState extends State<TestCommunication> {
   @override
   void dispose() {
     // TODO: implement dispose
-    _conn.disconnect();
+    _conn.close();
     super.dispose();
   }
 
