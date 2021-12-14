@@ -63,7 +63,7 @@ class ConnectionUDP {
     try {
       // Wifibot is using 2 channels: one for data and another one for sending commands
       // Setting the socket that will be used for requesting data and receiving it
-      await RawDatagramSocket.bind(_wifibotIPAddress, _udpPortWifibotData, reuseAddress: true)
+      await RawDatagramSocket.bind(InternetAddress.anyIPv4, _udpPortWifibotData, reuseAddress: true)
           .then((RawDatagramSocket socketData) {
         _socketWifiBotDataUDP = socketData;
         _socketWifibotDataUDPBroadcastStream = socketData.asBroadcastStream();
@@ -80,7 +80,7 @@ class ConnectionUDP {
       });
 
       // Setting the socket that will send commands
-      await RawDatagramSocket.bind(_wifibotIPAddress, _udpPortWifibotCommands, reuseAddress: true)
+      await RawDatagramSocket.bind(InternetAddress.anyIPv4, _udpPortWifibotCommands, reuseAddress: true)
           .then((RawDatagramSocket socketCommands) {
         _socketWifiBotCommandsUDP = socketCommands;
         print("SocketWifibotCommandsDataUDP has been initialised");
