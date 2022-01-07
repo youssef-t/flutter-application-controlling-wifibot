@@ -17,7 +17,7 @@ class _CustomJoystickState extends State<CustomJoystick> {
   @override
   Widget build(BuildContext context) {
     return Joystick(
-      period: const Duration(milliseconds: 500),
+      period: const Duration(milliseconds: 100),
       mode: JoystickMode.all,
       base: const JoystickBase(mode: JoystickMode.all),
       stickOffsetCalculator: const CircleStickOffsetCalculator(),
