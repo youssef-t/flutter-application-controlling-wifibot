@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/constants_wifibot.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/data_wifibot.dart';
 
@@ -73,10 +74,15 @@ class ConnectionUDP {
           // TODO ADD RECEIVE METHOD TO GET UDP MESSAGES
           Datagram? dg = _socketWifiBotDataUDP?.receive();
           print("IN LISTEN : ${dg?.data}");
-          _streamMessagesController.add(eventSentByWifibot.toString());
+          if(dg?.data != null){
+            String messageSentByWifibot = String.fromCharCodes(dg!.data);
+            print("IN LISTEN -  $messageSentByWifibot - THE MESSAGE IS ADDED");
+            _streamMessagesController.add(messageSentByWifibot);
+          }
         });
-
         print("SocketWifibotDataUDP has been initialised");
+      }).onError((error, stackTrace) {
+        print("SocketWifibotDataUDP - ERROR INITIALIZATION UDP: \n$error\n $stackTrace");
       });
 
       // Setting the socket that will send commands
@@ -95,12 +101,13 @@ class ConnectionUDP {
   /// Method to send a message to the wifibot.
   /// The parameter [isCommand] is set to true if we want to send a command to the wifibot.
   /// This is set to false if we want to send a message (for requesting data for example)
-  Future<void> send(String message, {bool isCommand = false}) async {
+  void send(String message, {bool isCommand = false}) {
     isCommand
         ? _socketWifiBotCommandsUDP?.send(message.codeUnits,
             InternetAddress(_wifibotIPAddress), _udpPortWifibotCommands)
         : _socketWifiBotDataUDP?.send(message.codeUnits,
             InternetAddress(_wifibotIPAddress), _udpPortWifibotData);
+    print("The message : - $message - is sent");
   }
 
   /// Initialize data requesting from wifibot by sending "init" and then we wait to receive as a response "ok"
@@ -108,21 +115,24 @@ class ConnectionUDP {
     // Then we proceed to resquest data from wifibot
     // First, we need to send the message "init"
     if (!_dataRequestingIsInitialized) {
-      await send("init", isCommand: false);
+      send("init", isCommand: false);
       String response = "";
       // Get the response of the wifibot
       // We declare a subscription so that we stop listening to the stream once we get "ok" as a response
       StreamSubscription<RawSocketEvent>? subscription;
       subscription =
           _socketWifibotDataUDPBroadcastStream?.listen((eventSentByWifibot) {
-            response = eventSentByWifibot.toString();
+            Datagram? dg = _socketWifiBotDataUDP?.receive();
+            if (dg != null){
+              response = String.fromCharCodes(dg.data);
+            }
             // Then the robot should respond once with "ok".
             if (response.toLowerCase().trim() == "ok") {
               _dataRequestingIsInitialized = true;
               print("OK IS RECEIVED");
               subscription?.cancel();
             } else {
-              print("WARNING - OK NOT RECEIVED / response : $response");
+              print("WARNING - OK NOT RECEIVED / response : ${response.toLowerCase().trim()}");
             }
           });
     }
@@ -175,5 +185,6 @@ class ConnectionUDP {
       _dataRequestingIsInitialized = false;
       print("UDP - closed");
     }
+
 
 }

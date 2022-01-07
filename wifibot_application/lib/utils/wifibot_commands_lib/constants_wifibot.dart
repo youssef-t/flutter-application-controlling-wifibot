@@ -2,7 +2,7 @@
 /// Class that contains Wifibot constants: ip addresses and ports
 class WifibotConstants {
   // TODO Change IP adress
-  static const String wifiBotIPAddressDefault = "192.168.129.91"; //"10.0.2.2";//"192.168.1.137";//192.168.1.106";
+  static const String wifiBotIPAddressDefault = "10.0.2.2";//"192.168.1.14";//"192.168.1.106";//"10.0.2.2";//"192.168.1.137";//
   static const String cameraIPAddressDefault = "192.168.1.106";
   // TODO Change port
   static const int tcpPortWifibotDefault = 15020;

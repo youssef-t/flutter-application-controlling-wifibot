@@ -83,9 +83,13 @@ class ConnectionTCP {
     print(
         "_streamMessagesController : ${_streamMessagesController.runtimeType}");
     // Listening to the stream (tcp messages) and configuring the streams that will be used in the UI
-    _socketWifiBotBroadcastStream?.listen((event) {
+    _socketWifiBotBroadcastStream!.listen((event) {
       print("IN LISTEN : ${String.fromCharCodes(event)}");
       _streamMessagesController.add(String.fromCharCodes(event));
+
+      DataWifibot dataWifibot = DataWifibot(event);
+      _streamDataWifibotController.add(dataWifibot);
+      dataWifibot.showData();
     });
     _wifibotIsConnected = true;
   }
@@ -99,6 +103,17 @@ class ConnectionTCP {
     _socketWifiBot?.add(utf8.encode(commandString));
     //_socketWifiBot?.write(commandString);
     print('Command "$commandString" is sent');
+  }
+
+  /// Method to send a command to the wifibot after the connection
+  Future<void> sendCommand(CommandWifibot command) async {
+    if (!_wifibotIsConnected) {
+      await connect();
+    }
+    print("IN SEND - _socketWifibot type : ${_socketWifiBot.runtimeType}");
+    _socketWifiBot!.add(command.commandPacket);
+    //_socketWifiBot?.write(commandString);
+    print('Command "${command.commandPacket}" is sent');
   }
 
   /// Initialize data requesting from wifibot by sending "init" and then we wait to receive as a response "ok"
@@ -136,7 +151,8 @@ class ConnectionTCP {
     if (_stopGettingDataFromWifiBot) {
       _stopGettingDataFromWifiBot = false;
     }
-
+    // TODO Remove this line
+    _dataRequestingIsInitialized = true;
     if (_dataRequestingIsInitialized) {
       // Adding the data to the stream containing the Data related to the wifibot
       _socketWifiBotBroadcastStream?.listen((lastMessageByWifibot) {

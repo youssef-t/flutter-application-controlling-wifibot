@@ -9,7 +9,7 @@ class Connection{
   int? _rotationCameraX;
   int? _rotationCameraY;
 
-  Commands? _command;
+  CommandWifibot? _command;
   DataWifibot? _dataWifibot;
   final int _timer = 100; //100ms
 

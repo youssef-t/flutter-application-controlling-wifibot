@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 
-class Joypad extends StatefulWidget {
+
+class CustomJoystick extends StatefulWidget {
+  final Function(StickDragDetails) listenerJoypadOnChange;
+
+  CustomJoystick({Key? key,
+    required this.listenerJoypadOnChange(StickDragDetails stickDragDetails),
+  }) : super(key: key);
+
   @override
-  _JoypadState createState() => _JoypadState();
+  _CustomJoystickState createState() => _CustomJoystickState();
 }
 
-class _JoypadState extends State<Joypad> {
+class _CustomJoystickState extends State<CustomJoystick> {
   @override
   Widget build(BuildContext context) {
     return Joystick(
@@ -15,10 +22,9 @@ class _JoypadState extends State<Joypad> {
       base: const JoystickBase(mode: JoystickMode.all),
       stickOffsetCalculator: const CircleStickOffsetCalculator(),
       listener: (details) {
-    setState(() {
-      print(" x: ${details.x} - y : ${details.y}");
-    });
+        widget.listenerJoypadOnChange(details);
       },
     );
   }
+
 }

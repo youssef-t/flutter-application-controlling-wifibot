@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 /// Enum [Direction] tells the robot which direction to go to.
@@ -10,28 +9,28 @@ enum Direction {
 }
 
 /// Class to determine which data to send to send (=commands).
-class Commands {
-  static const int lengthCommandTCP = 7;
+class CommandWifibot {
+  static const int lengthCommandTCP = 9;
 
   // 2 bytes for CRC
   static const int lengthCommandUDP = 9;
 
-  final Uint8List _commandPacket = Uint8List(lengthCommandUDP);
+  final Uint8List _commandPacket = Uint8List(lengthCommandTCP);
 
   Uint8List get commandPacket => _commandPacket;
 
   static const int _upperLimitSpeed = 240;
+  static int get upperLimitSpeed => _upperLimitSpeed;
 
-  Commands() {
+  CommandWifibot() {
     _commandPacket[0] = 255;
-    _commandPacket[1] = lengthCommandTCP;
+    _commandPacket[1] = 0x07;
 
-    setRightSpeed(10);
-    setLeftSpeed(10);
+    setRightSpeed(120);
+    setLeftSpeed(120);
     setDirection(Direction.forward);
 
-
-    // TODO UPDATE CRC IN CASE WE USE UDP - AND THE LIBRARY ONLY SUPPORTS TCP
+    updateCRC();
   }
 
   /// Change
@@ -78,7 +77,7 @@ class Commands {
     }
   }
 
-  /// Calculate CRC to add it to the command to send for UDP
+  /// Calculate CRC to add it to the command
   void updateCRC() {
     int crc = 0xFFFF;
     int polynome = 0xA001;
@@ -102,6 +101,6 @@ class Commands {
 
     _commandPacket[lengthCommandUDP-2] = crc & 0x00FF;
     _commandPacket[lengthCommandUDP-1] = crc >> 8;
-
   }
+
 }

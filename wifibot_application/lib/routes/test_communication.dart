@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection_tcp.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection_udp.dart';
+import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
 
 class TestCommunication extends StatefulWidget {
   @override
@@ -32,6 +33,7 @@ class _TestCommunicationState extends State<TestCommunication> {
     //_conn = ConnectionTCP();
     _conn = ConnectionUDP();
     _conn.initializeStreamsAndSockets();
+    //_conn.connect();
   }
 
   Widget _buildBody() {
@@ -54,9 +56,9 @@ class _TestCommunicationState extends State<TestCommunication> {
         ),
         const Spacer(),
         ElevatedButton(
-          onPressed: () {
-            _conn.initializeStreamsAndSockets();
-            //_conn.connect();
+          onPressed: () async {
+            //_conn.initializeStreamsAndSockets();
+            await _conn.initializeStreamsAndSockets();
             final text = _controller.text;
             setState(() {
               _input = text;
@@ -80,6 +82,10 @@ class _TestCommunicationState extends State<TestCommunication> {
           child: Text('Getting data from wifibot'),
         ),
         const Spacer(),
+        ElevatedButton(onPressed: (){
+          CommandWifibot command = CommandWifibot();
+          _conn.send(String.fromCharCodes(command.commandPacket));
+        }, child: Text("Send MOVE FORWARD command")),
         const Spacer(),
         ElevatedButton(
           onPressed: () {
