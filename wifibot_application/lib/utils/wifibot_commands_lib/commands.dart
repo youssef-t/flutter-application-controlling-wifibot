@@ -10,12 +10,10 @@ enum Direction {
 
 /// Class to determine which data to send to send (=commands).
 class CommandWifibot {
-  static const int lengthCommandTCP = 9;
+  // 2 last bytes for CRC
+  static const int lengthCommand = 9;
 
-  // 2 bytes for CRC
-  static const int lengthCommandUDP = 9;
-
-  final Uint8List _commandPacket = Uint8List(lengthCommandTCP);
+  final Uint8List _commandPacket = Uint8List(lengthCommand);
 
   Uint8List get commandPacket => _commandPacket;
 
@@ -26,21 +24,21 @@ class CommandWifibot {
     _commandPacket[0] = 255;
     _commandPacket[1] = 0x07;
 
-    setRightSpeed(120);
-    setLeftSpeed(120);
-    setDirection(Direction.forward);
+    _setRightSpeed(120);
+    _setLeftSpeed(120);
+    _setDirection(Direction.forward);
 
-    updateCRC();
+    _updateCRC();
   }
 
   /// Change
   void setAction(int rightSpeed, int leftSpeed, Direction dir) {
-    setRightSpeed(rightSpeed);
-    setLeftSpeed(leftSpeed);
-    setDirection(dir);
+    _setRightSpeed(rightSpeed);
+    _setLeftSpeed(leftSpeed);
+    _setDirection(dir);
   }
 
-  void setRightSpeed(int rightSpeed) {
+  void _setRightSpeed(int rightSpeed) {
     if (rightSpeed > _upperLimitSpeed) {
       _commandPacket[2] = _upperLimitSpeed;
       print("WARNING - EXCEEDING RIGHT SPEED LIMIT");
@@ -50,7 +48,7 @@ class CommandWifibot {
     _commandPacket[3] = 0;
   }
 
-  void setLeftSpeed(int leftSpeed) {
+  void _setLeftSpeed(int leftSpeed) {
     if (leftSpeed > _upperLimitSpeed) {
       _commandPacket[4] = _upperLimitSpeed;
       print("WARNING - EXCEEDING LEFT SPEED LIMIT");
@@ -60,7 +58,7 @@ class CommandWifibot {
     _commandPacket[5] = 0;
   }
 
-  void setDirection(Direction dir) {
+  void _setDirection(Direction dir) {
     switch (dir) {
       case Direction.forward:
         _commandPacket[6] = 80;
@@ -77,8 +75,34 @@ class CommandWifibot {
     }
   }
 
+  // TODO verify if it is working on robot
+  void setSpeed(int rightSpeed, int leftSpeed) {
+    if(leftSpeed > 0) {
+      if(rightSpeed >0) {
+        _setDirection(Direction.forward);
+      }
+      else {
+        _setDirection(Direction.clockwise);
+        rightSpeed *= -1;
+      }
+    }
+    else {
+      leftSpeed *= -1;
+      if (rightSpeed > 0){
+        _setDirection(Direction.anticlockwise);
+      }
+      else {
+        _setDirection(Direction.backward);
+        rightSpeed *= -1;
+      }
+    }
+    _setRightSpeed(rightSpeed);
+    _setLeftSpeed(leftSpeed);
+    _updateCRC();
+  }
+
   /// Calculate CRC to add it to the command
-  void updateCRC() {
+  void _updateCRC() {
     int crc = 0xFFFF;
     int polynome = 0xA001;
     int cptOctet = 0;
@@ -86,7 +110,7 @@ class CommandWifibot {
     int parity = 0;
 
     // For loop in the part containing the command (not CRC)
-    for (cptOctet = 0; cptOctet < lengthCommandUDP - 3; cptOctet++) {
+    for (cptOctet = 0; cptOctet < lengthCommand - 3; cptOctet++) {
       // Exclusive OR between the message and the crc
       crc ^= _commandPacket.elementAt(1 + cptOctet);
 
@@ -99,8 +123,8 @@ class CommandWifibot {
       }
     }
 
-    _commandPacket[lengthCommandUDP-2] = crc & 0x00FF;
-    _commandPacket[lengthCommandUDP-1] = crc >> 8;
+    _commandPacket[lengthCommand-2] = crc & 0x00FF;
+    _commandPacket[lengthCommand-1] = crc >> 8;
   }
 
 }
