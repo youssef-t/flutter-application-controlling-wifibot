@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:math';
 
 /// Enum [Direction] tells the robot which direction to go to.
 enum Direction {
@@ -76,7 +77,7 @@ class CommandWifibot {
   }
 
   // TODO verify if it is working on robot
-  void setSpeed(int rightSpeed, int leftSpeed) {
+  void _setSpeed(int rightSpeed, int leftSpeed) {
     if(leftSpeed > 0) {
       if(rightSpeed >0) {
         _setDirection(Direction.forward);
@@ -99,6 +100,44 @@ class CommandWifibot {
     _setRightSpeed(rightSpeed);
     _setLeftSpeed(leftSpeed);
     _updateCRC();
+  }
+
+  /// Set right and left speeds given x and y. x and y are between -1 and 1 and they
+  /// represent the coordinates of the joystick.
+  void setSpeedFromXandY(double x, double y){
+    // Polar coordinates:
+    double radius = sqrt(x*x + y*y);
+    double theta = atan2(y, x);
+
+    double rightSpeedNotNormalized = 0.0;
+    double leftSpeedNotNormalized = 0.0;
+
+    if( y > 0) {
+      if (x > 0) {
+        rightSpeedNotNormalized = radius*cos(theta);
+        leftSpeedNotNormalized = radius;
+      }
+      else {
+        rightSpeedNotNormalized = radius;
+        leftSpeedNotNormalized = (radius*cos(theta)).abs();
+      }
+    }
+    // if y < 0, we want right and left speeds to be negative
+    else {
+      if (x > 0) {
+        rightSpeedNotNormalized = - radius*cos(theta);
+        leftSpeedNotNormalized = - radius;
+      }
+      else {
+        rightSpeedNotNormalized = - radius;
+        leftSpeedNotNormalized = - (radius*cos(theta)).abs();
+      }
+    }
+
+    // Normalize the speeds
+    int rightSpeed = (rightSpeedNotNormalized * upperLimitSpeed).round();
+    int leftSpeed = (leftSpeedNotNormalized * upperLimitSpeed).round();
+    _setSpeed(rightSpeed, leftSpeed);
   }
 
   /// Calculate CRC to add it to the command
