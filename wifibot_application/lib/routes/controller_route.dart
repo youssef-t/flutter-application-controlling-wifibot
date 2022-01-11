@@ -31,9 +31,11 @@ class _ControllerRouteState extends State<ControllerRoute> {
     _conn.connect(
         wifiBotIPAddress: WifibotConstants.wifiBotIPAddressDefault,
         wifiBotTCPPort: WifibotConstants.tcpPortWifibotDefault,
-        timeoutDuration: WifibotConstants.timeoutDurationTCPDefault);
+        timeoutDuration: WifibotConstants.timeoutDurationTCPDefault).then(
+            (value) {
+              _sendCommandToWifibotFromXAndY(_xJoystick, _yJoystick);
+            });
     _updateXandYWhenNoValueFromJoystick();
-    _sendCommandToWifibotFromXAndY(this._xJoystick, this._yJoystick);
   }
 
   @override
@@ -121,7 +123,11 @@ class _ControllerRouteState extends State<ControllerRoute> {
   }
 
   void _sendCommandToWifibotFromXAndY(double x, double y) {
-    // TODO Change setAction parameters
-    this._commandWifibot.setAction(10, 10, Direction.forward);
+    Timer.periodic(const Duration(milliseconds: 120), (timer) {
+      setState(() {
+        _commandWifibot.setSpeedFromXandY(x, y);
+        _conn.sendCommand(_commandWifibot);
+      });
+    });
   }
 }
