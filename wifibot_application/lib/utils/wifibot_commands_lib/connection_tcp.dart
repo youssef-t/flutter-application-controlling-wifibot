@@ -36,15 +36,7 @@ class ConnectionTCP {
   /// Variable used to stop getting data from wifibot
   static bool _stopGettingDataFromWifiBot = false;
 
-  ConnectionTCP(
-      {String wifiBotIPAddress = WifibotConstants.wifiBotIPAddressDefault,
-      int wifiBotTCPPort = WifibotConstants.tcpPortWifibotDefault,
-      int timeoutDuration = WifibotConstants.timeoutDurationTCPDefault}) {
-    connect(
-        wifiBotIPAddress: wifiBotIPAddress,
-        wifiBotTCPPort: wifiBotTCPPort,
-        timeoutDuration: timeoutDuration);
-  }
+  ConnectionTCP();
 
   /// Method to connect to the wifibot using TCP
   Future<void> connect(
@@ -62,6 +54,8 @@ class ConnectionTCP {
           .timeout(Duration(seconds: timeoutDuration))
           .then((socket) {
         _initializeStreamsAndSocket(socket);
+      }).onError((error, stackTrace){
+        _wifibotIsConnected = false;
       });
     } on SocketException catch (e, s) {
       print('SocketException: $e, \n Trace: $s');
@@ -106,14 +100,17 @@ class ConnectionTCP {
   }
 
   /// Method to send a command to the wifibot after the connection
-  Future<void> sendCommand(CommandWifibot command) async {
-    if (!_wifibotIsConnected) {
-      await connect();
-    }
+  void sendCommand(CommandWifibot command) {
+
     print("IN SEND - _socketWifibot type : ${_socketWifiBot.runtimeType}");
-    _socketWifiBot!.add(command.commandPacket);
-    //_socketWifiBot?.write(commandString);
-    print('Command "${command.commandPacket}" is sent');
+    if(_wifibotIsConnected){
+      print('Command "${command.commandPacket}" is getting prepared to be sent');
+      _socketWifiBot?.add(command.commandPacket);
+      //_socketWifiBot?.write(commandString);
+    }
+    else {
+      print("[ERROR - sendCommand] WIFIBOT NOT CONNECTED");
+    }
   }
 
   /// Initialize data requesting from wifibot by sending "init" and then we wait to receive as a response "ok"

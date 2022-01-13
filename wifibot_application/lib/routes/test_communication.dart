@@ -13,8 +13,8 @@ class TestCommunication extends StatefulWidget {
 }
 
 class _TestCommunicationState extends State<TestCommunication> {
-  //late ConnectionTCP _conn;
-  late ConnectionUDP _conn;
+  late ConnectionTCP _conn;
+  //late ConnectionUDP _conn;
   var _input = '';
   final _controller = TextEditingController();
   @override
@@ -30,10 +30,10 @@ class _TestCommunicationState extends State<TestCommunication> {
   @override
   void initState() {
     super.initState();
-    //_conn = ConnectionTCP();
-    _conn = ConnectionUDP();
-    _conn.initializeStreamsAndSockets();
-    //_conn.connect();
+    _conn = ConnectionTCP();
+    //_conn = ConnectionUDP();
+    //_conn.initializeStreamsAndSockets();
+    _conn.connect();
   }
 
   Widget _buildBody() {
@@ -58,7 +58,7 @@ class _TestCommunicationState extends State<TestCommunication> {
         ElevatedButton(
           onPressed: () async {
             //_conn.initializeStreamsAndSockets();
-            await _conn.initializeStreamsAndSockets();
+            await _conn.connect();
             final text = _controller.text;
             setState(() {
               _input = text;
@@ -84,6 +84,7 @@ class _TestCommunicationState extends State<TestCommunication> {
         const Spacer(),
         ElevatedButton(onPressed: (){
           CommandWifibot command = CommandWifibot();
+          command.setAction(120, 120, Direction.forward);
           _conn.send(String.fromCharCodes(command.commandPacket));
         }, child: Text("Send MOVE FORWARD command")),
         const Spacer(),

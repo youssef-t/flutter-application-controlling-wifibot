@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wifibot_application/routes/controller_route.dart';
+import 'package:wifibot_application/routes/wifibot_controller_route.dart';
 import 'package:wifibot_application/routes/home_route.dart';
 import 'package:wifibot_application/routes/settings_route.dart';
 import 'package:wifibot_application/routes/test_communication.dart';
