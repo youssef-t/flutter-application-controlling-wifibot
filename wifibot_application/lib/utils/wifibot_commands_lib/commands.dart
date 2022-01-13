@@ -15,9 +15,9 @@ class CommandWifibot {
   static int get upperLimitSpeed => _upperLimitSpeed;
 
   static const int _leftSpeedForwardFlag = 64;
-  static const _rightSpeedForwardFlag = 0;
-  static const _rightSpeedBackwardFlag = 16;
   static const _leftSpeedBackwardFlag = 0;
+  static const _rightSpeedForwardFlag = 16;
+  static const _rightSpeedBackwardFlag = 0;
 
   CommandWifibot() {
     _commandPacket[0] = 255;
