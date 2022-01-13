@@ -1,13 +1,6 @@
 import 'dart:typed_data';
 import 'dart:math';
 
-/// Enum [Direction] tells the robot which direction to go to.
-enum Direction {
-  forward,
-  backward,
-  clockwise,
-  anticlockwise,
-}
 
 /// Class to determine which data to send to send (=commands).
 class CommandWifibot {
@@ -21,24 +14,20 @@ class CommandWifibot {
   static const int _upperLimitSpeed = 240;
   static int get upperLimitSpeed => _upperLimitSpeed;
 
+  static const int _leftSpeedForwardFlag = 64;
+  static const _rightSpeedForwardFlag = 0;
+  static const _rightSpeedBackwardFlag = 16;
+  static const _leftSpeedBackwardFlag = 0;
+
   CommandWifibot() {
     _commandPacket[0] = 255;
     _commandPacket[1] = 0x07;
 
-    _setRightSpeed(120);
-    _setLeftSpeed(120);
-    _setDirection(Direction.forward);
+    _setSpeed(0, 0);
 
     _updateCRC();
   }
 
-  /// Change
-  void setAction(int rightSpeed, int leftSpeed, Direction dir) {
-    _setRightSpeed(rightSpeed);
-    _setLeftSpeed(leftSpeed);
-    _setDirection(dir);
-    _updateCRC();
-  }
 
   void _setRightSpeed(int rightSpeed) {
     if (rightSpeed > _upperLimitSpeed) {
@@ -60,44 +49,26 @@ class CommandWifibot {
     _commandPacket[5] = 0;
   }
 
-  void _setDirection(Direction dir) {
-    switch (dir) {
-      case Direction.forward:
-        _commandPacket[6] = 80;
-        break;
-      case Direction.backward:
-        _commandPacket[6] = 2;
-        break;
-      case Direction.anticlockwise:
-        _commandPacket[6] = 62;
-        break;
-      case Direction.clockwise:
-        _commandPacket[6] = 66;
-        break;
-    }
-  }
 
-  // TODO verify if it is working on robot
   void _setSpeed(int rightSpeed, int leftSpeed) {
-    if(leftSpeed > 0) {
-      if(rightSpeed >0) {
-        _setDirection(Direction.forward);
-      }
-      else {
-        _setDirection(Direction.clockwise);
-        rightSpeed *= -1;
-      }
+
+    _commandPacket[6] = 0;
+    if(leftSpeed < 0) {
+      leftSpeed *=-1;
+      _commandPacket[6] += _leftSpeedBackwardFlag;
     }
     else {
-      leftSpeed *= -1;
-      if (rightSpeed > 0){
-        _setDirection(Direction.anticlockwise);
-      }
-      else {
-        _setDirection(Direction.backward);
-        rightSpeed *= -1;
-      }
+      _commandPacket[6] += _leftSpeedForwardFlag;
     }
+
+    if(rightSpeed < 0) {
+      rightSpeed *=-1;
+      _commandPacket[6] += _rightSpeedBackwardFlag;
+    }
+    else {
+      _commandPacket[6] += _rightSpeedForwardFlag;
+    }
+
     _setRightSpeed(rightSpeed);
     _setLeftSpeed(leftSpeed);
     _updateCRC();
@@ -115,23 +86,23 @@ class CommandWifibot {
 
     if( y > 0) {
       if (x > 0) {
-        rightSpeedNotNormalized = radius*cos(theta);
+        rightSpeedNotNormalized = radius*sin(theta).abs();
         leftSpeedNotNormalized = radius;
       }
       else {
         rightSpeedNotNormalized = radius;
-        leftSpeedNotNormalized = (radius*cos(theta)).abs();
+        leftSpeedNotNormalized = (radius*sin(theta)).abs();
       }
     }
     // if y < 0, we want right and left speeds to be negative
     else {
       if (x > 0) {
-        rightSpeedNotNormalized = - radius*cos(theta);
+        rightSpeedNotNormalized = - radius*sin(theta).abs();
         leftSpeedNotNormalized = - radius;
       }
       else {
         rightSpeedNotNormalized = - radius;
-        leftSpeedNotNormalized = - (radius*cos(theta)).abs();
+        leftSpeedNotNormalized = - (radius*sin(theta)).abs();
       }
     }
 

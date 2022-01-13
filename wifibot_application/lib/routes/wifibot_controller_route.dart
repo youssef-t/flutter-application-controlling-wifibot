@@ -124,7 +124,7 @@ class _ControllerRouteState extends State<ControllerRoute> {
     Timer.periodic(const Duration(milliseconds: 160), (timer) {
       setState(() {
         print("x: $_xJoystick, y: $_yJoystick");
-        _commandWifibot.setSpeedFromXandY(_xJoystick, _yJoystick);
+        _commandWifibot.setSpeedFromXandY(-_xJoystick, -_yJoystick);
         //_commandWifibot.setAction(150, 150, Direction.forward);
         _conn.sendCommand(_commandWifibot);
       });

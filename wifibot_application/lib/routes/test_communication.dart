@@ -84,7 +84,7 @@ class _TestCommunicationState extends State<TestCommunication> {
         const Spacer(),
         ElevatedButton(onPressed: (){
           CommandWifibot command = CommandWifibot();
-          command.setAction(120, 120, Direction.forward);
+          command.setSpeedFromXandY(0.5, 0.5);
           _conn.send(String.fromCharCodes(command.commandPacket));
         }, child: Text("Send MOVE FORWARD command")),
         const Spacer(),
