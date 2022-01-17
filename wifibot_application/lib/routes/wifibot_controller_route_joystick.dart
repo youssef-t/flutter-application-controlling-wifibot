@@ -107,23 +107,13 @@ class _ControllerRouteJoystickState extends State<ControllerRouteJoystick> {
         Container(
           alignment: Alignment.topRight,
           child: StreamBuilder(
-            stream: _conn.streamDataWifibotController.stream,
+            stream: _conn.streamDataWifibotController.stream.map((event) => json.encode(event.dataWifibotMap)),
             initialData: "No data",
             builder: (
                 BuildContext context,
                 AsyncSnapshot<dynamic> snapshot) {
-              String _textToDisplay = json.encode(snapshot.data.dataWifibotMap);
-              return RichText(
-                  text: TextSpan(
-                    text: 'Wifibot response: ',
-                    style: DefaultTextStyle.of(context).style,
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: _textToDisplay,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.red)),
-                    ],
-                  ));
+              String _textToDisplay = json.encode(snapshot.data);
+              return Text("Wifibot response: $_textToDisplay", style: TextStyle(color: Colors.blue, fontSize: 20),);
 
             },
 
