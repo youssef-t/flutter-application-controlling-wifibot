@@ -40,14 +40,29 @@ class HomeRoute extends StatelessWidget {
                 ElevatedButton(
                   // Go the controller route
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.controller);
+                    Navigator.pushNamed(context, AppRoutes.controllerJoystick);
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity,
                         50), // double.infinity is the width and 50 is the height
                   ),
                   child: const Text(
-                    "Controller",
+                    "Controller with Joystick",
+                    style: textButtonStyle,
+                  ),
+                ),
+                Spacer(),
+                ElevatedButton(
+                  // Go the controller route
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.controllerGyroscope);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity,
+                        50), // double.infinity is the width and 50 is the height
+                  ),
+                  child: const Text(
+                    "Controller with Gyroscope",
                     style: textButtonStyle,
                   ),
                 ),

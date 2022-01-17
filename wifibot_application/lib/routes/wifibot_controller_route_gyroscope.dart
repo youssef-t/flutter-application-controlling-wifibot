@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wifibot_application/custom_widgets/custom_joystick.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection_tcp.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/constants_wifibot.dart';
@@ -10,12 +9,12 @@ import 'dart:convert';
 import 'package:sensors_plus/sensors_plus.dart';
 
 
-class ControllerRoute extends StatefulWidget {
+class ControllerRouteGyroscope extends StatefulWidget {
   @override
-  _ControllerRouteState createState() => _ControllerRouteState();
+  _ControllerRouteGyroscopeState createState() => _ControllerRouteGyroscopeState();
 }
 
-class _ControllerRouteState extends State<ControllerRoute> {
+class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
   late ConnectionTCP _conn;
   double _xJoystick = 0;
   double _yJoystick = 0;
@@ -84,27 +83,6 @@ class _ControllerRouteState extends State<ControllerRoute> {
           ),
         ),
         Container(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Row(
-              children: [
-                SizedBox(
-                    height: 130,
-                    width: 130,
-                    child: FittedBox(
-                      child: CustomJoystick(
-                        listenerJoypadOnChange: (stickDragDetails) {
-                          _updateXandYFromJoystick(
-                              stickDragDetails.x, stickDragDetails.y);
-                        },
-                      ),
-                    )),
-              ],
-            ),
-          ),
-        ),
-        Container(
           alignment: Alignment.topRight,
           child: StreamBuilder(
             stream: _conn.streamDataWifibotController.stream,
@@ -142,21 +120,21 @@ class _ControllerRouteState extends State<ControllerRoute> {
   }
 
   Timer _updateXandYWhenNoValueFromJoystick() => Timer.periodic(const Duration(milliseconds: 150), (timer) {
-      setState(() {
-        if (!_isJoystickUpdating) {
-          _xJoystick = 0;
-          _yJoystick = 0;
-        }
-        _isJoystickUpdating = false;
-      });
+    setState(() {
+      if (!_isJoystickUpdating) {
+        _xJoystick = 0;
+        _yJoystick = 0;
+      }
+      _isJoystickUpdating = false;
     });
+  });
 
 
   Timer _sendCommandToWifibotFromXAndY() => Timer.periodic(const Duration(milliseconds: 160), (timer) {
-      setState(() {
-        _commandWifibot.setSpeedFromXandY(-_xJoystick, -_yJoystick);
-        _conn.sendCommand(_commandWifibot);
-      });
+    setState(() {
+      _commandWifibot.setSpeedFromXandY(-_xJoystick, -_yJoystick);
+      _conn.sendCommand(_commandWifibot);
     });
+  });
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wifibot_application/routes/wifibot_controller_route.dart';
+import 'package:wifibot_application/routes/wifibot_controller_route_gyroscope.dart';
+import 'package:wifibot_application/routes/wifibot_controller_route_joystick.dart';
 import 'package:wifibot_application/routes/home_route.dart';
 import 'package:wifibot_application/routes/settings_route.dart';
 import 'package:wifibot_application/routes/test_communication.dart';
@@ -10,7 +11,8 @@ import 'package:wifibot_application/utils/orientation_helpers.dart';
 class AppRoutes {
   static const home = '/';
   static const settings = '/settings';
-  static const controller = '/controller';
+  static const controllerJoystick = '/controllerJoystick';
+  static const controllerGyroscope = '/controllerGyroscope';
   static const testCommunication = '/testCommunication';
 }
 
@@ -33,11 +35,18 @@ class RouteGenerator {
           builder: (_) => SettingsRoute(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
-      case AppRoutes.controller:
+      case AppRoutes.controllerJoystick:
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive,
             overlays: []);
         return MaterialPageRoute(
-          builder: (_) => ControllerRoute(),
+          builder: (_) => ControllerRouteJoystick(),
+          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+        );
+      case AppRoutes.controllerGyroscope:
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive,
+            overlays: []);
+        return MaterialPageRoute(
+          builder: (_) => ControllerRouteGyroscope(),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
       case AppRoutes.testCommunication:
