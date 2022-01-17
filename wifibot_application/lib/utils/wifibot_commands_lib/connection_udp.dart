@@ -156,7 +156,7 @@ class ConnectionUDP {
             "IN gettingDataFromWifibot - lastMessageByWifibot: ${lastMessageByWifibotRawSocketEvent.toString()}");
         DataWifibot dataWifibot = DataWifibot.withRawDataPacketString(lastMessageByWifibotRawSocketEvent.toString());
         _streamDataWifibotController.add(dataWifibot);
-        dataWifibot.showData();
+        //dataWifibot.showData();
       });
       while (!_stopGettingDataFromWifiBot) {
         // send "data" so that the wifibot sends back a packet containing information about it

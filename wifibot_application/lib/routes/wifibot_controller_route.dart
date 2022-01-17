@@ -6,6 +6,9 @@ import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection_tcp.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/constants_wifibot.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
+import 'dart:convert';
+import 'package:sensors_plus/sensors_plus.dart';
+
 
 class ControllerRoute extends StatefulWidget {
   @override
@@ -18,6 +21,9 @@ class _ControllerRouteState extends State<ControllerRoute> {
   double _yJoystick = 0;
   bool _isJoystickUpdating = false;
   CommandWifibot _commandWifibot = CommandWifibot();
+
+  late Timer _timerSendCommand;
+  late Timer _timerUpdateXandY;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +38,16 @@ class _ControllerRouteState extends State<ControllerRoute> {
         wifiBotIPAddress: WifibotConstants.wifiBotIPAddressDefault,
         wifiBotTCPPort: WifibotConstants.tcpPortWifibotDefault,
         timeoutDuration: WifibotConstants.timeoutDurationTCPDefault);
-    _updateXandYWhenNoValueFromJoystick();
-    _sendCommandToWifibotFromXAndY();
+    _timerUpdateXandY = _updateXandYWhenNoValueFromJoystick();
+    _timerSendCommand = _sendCommandToWifibotFromXAndY();
 
   }
 
   @override
   void dispose() {
     _conn.close();
+    _timerUpdateXandY.cancel();
+    _timerSendCommand.cancel();
     super.dispose();
   }
 
@@ -95,6 +103,31 @@ class _ControllerRouteState extends State<ControllerRoute> {
               ],
             ),
           ),
+        ),
+        Container(
+          alignment: Alignment.topRight,
+          child: StreamBuilder(
+            stream: _conn.streamDataWifibotController.stream,
+            initialData: "No data",
+            builder: (
+                BuildContext context,
+                AsyncSnapshot<dynamic> snapshot) {
+              String _textToDisplay = json.encode(snapshot.data.dataWifibotMap);
+              return RichText(
+                  text: TextSpan(
+                    text: 'Wifibot response: ',
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: _textToDisplay,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.red)),
+                    ],
+                  ));
+
+            },
+
+          ),
         )
       ],
     );
@@ -108,8 +141,7 @@ class _ControllerRouteState extends State<ControllerRoute> {
     });
   }
 
-  void _updateXandYWhenNoValueFromJoystick() {
-    Timer.periodic(const Duration(milliseconds: 150), (timer) {
+  Timer _updateXandYWhenNoValueFromJoystick() => Timer.periodic(const Duration(milliseconds: 150), (timer) {
       setState(() {
         if (!_isJoystickUpdating) {
           _xJoystick = 0;
@@ -118,16 +150,13 @@ class _ControllerRouteState extends State<ControllerRoute> {
         _isJoystickUpdating = false;
       });
     });
-  }
 
-  void _sendCommandToWifibotFromXAndY() {
-    Timer.periodic(const Duration(milliseconds: 160), (timer) {
+
+  Timer _sendCommandToWifibotFromXAndY() => Timer.periodic(const Duration(milliseconds: 160), (timer) {
       setState(() {
-        print("x: $_xJoystick, y: $_yJoystick");
         _commandWifibot.setSpeedFromXandY(-_xJoystick, -_yJoystick);
-        //_commandWifibot.setAction(150, 150, Direction.forward);
         _conn.sendCommand(_commandWifibot);
       });
     });
-  }
+
 }

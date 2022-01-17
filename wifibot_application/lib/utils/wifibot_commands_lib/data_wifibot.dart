@@ -14,7 +14,7 @@ class DataWifibot{
   int _lengthRawDataPacketReceived = 0;
 
   /// Variable to store all the data related to the state of the robot
-  var _dataWifibotMap = Map();
+  var _dataWifibotMap = {};
   get dataWifibotMap => _dataWifibotMap;
 
   /// Default constructor
@@ -57,7 +57,7 @@ class DataWifibot{
 
   double? getRightSpeed() {
     if (!_isDataValid()) return null;
-    int rightSpeed = (_rawDataPacket[10] << 8) + rawDataPacket[9];
+    int rightSpeed = (_rawDataPacket[10] << 8) + _rawDataPacket[9];
     if(rightSpeed > 32767) {
       rightSpeed -= 65536;
     }
@@ -66,7 +66,7 @@ class DataWifibot{
 
   double? getLeftSpeed() {
     if (!_isDataValid()) return null;
-    int leftSpeed = (_rawDataPacket[1] << 8) + rawDataPacket[0];
+    int leftSpeed = (_rawDataPacket[1] << 8) + _rawDataPacket[0];
     if(leftSpeed > 32767) {
       leftSpeed -= 65536;
     }
@@ -75,8 +75,8 @@ class DataWifibot{
   int? getBattery() => !_isDataValid() ? null:rawDataPacket[2];
   int? getIR_LF() => !_isDataValid() ? null:rawDataPacket[3];
   int? getIR_LB() => !_isDataValid() ? null:rawDataPacket[4];
-  int? getIR_RF() => !_isDataValid() ? null:rawDataPacket[12];
-  int? getIR_RB() => !_isDataValid() ? null:rawDataPacket[11];
+  int? getIR_RF() => !_isDataValid() ? null:rawDataPacket[11];
+  int? getIR_RB() => !_isDataValid() ? null:rawDataPacket[12];
 
   int? getOdometryL() => !_isDataValid() ? null:(rawDataPacket[8] << 24)+(rawDataPacket[7] << 16)
       +(rawDataPacket[6] << 8)+rawDataPacket[5];

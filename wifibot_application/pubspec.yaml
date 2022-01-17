@@ -38,6 +38,7 @@ dependencies:
   bonfire: ^1.9.4
   flutter_mjpeg: ^2.0.1
   regexed_validator: ^2.0.0+1
+  sensors_plus: ^1.2.1
 
 
 dev_dependencies:

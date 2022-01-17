@@ -78,12 +78,11 @@ class ConnectionTCP {
         "_streamMessagesController : ${_streamMessagesController.runtimeType}");
     // Listening to the stream (tcp messages) and configuring the streams that will be used in the UI
     _socketWifiBotBroadcastStream!.listen((event) {
-      print("IN LISTEN : ${String.fromCharCodes(event)}");
       _streamMessagesController.add(String.fromCharCodes(event));
 
       DataWifibot dataWifibot = DataWifibot(event);
       _streamDataWifibotController.add(dataWifibot);
-      dataWifibot.showData();
+      //dataWifibot.showData();
     });
     _wifibotIsConnected = true;
   }
@@ -93,7 +92,7 @@ class ConnectionTCP {
     if (!_wifibotIsConnected) {
       await connect();
     }
-    print("IN SEND - _socketWifibot type : ${_socketWifiBot.runtimeType}");
+
     _socketWifiBot?.add(utf8.encode(commandString));
     //_socketWifiBot?.write(commandString);
     print('Command "$commandString" is sent');
@@ -102,9 +101,7 @@ class ConnectionTCP {
   /// Method to send a command to the wifibot after the connection
   void sendCommand(CommandWifibot command) {
 
-    print("IN SEND - _socketWifibot type : ${_socketWifiBot.runtimeType}");
     if(_wifibotIsConnected){
-      print('Command "${command.commandPacket}" is getting prepared to be sent');
       _socketWifiBot?.add(command.commandPacket);
       //_socketWifiBot?.write(commandString);
     }
@@ -157,7 +154,7 @@ class ConnectionTCP {
             "IN gettingDataFromWifibot - lastMessageByWifibot: ${String.fromCharCodes(lastMessageByWifibot)}");
         DataWifibot dataWifibot = DataWifibot(lastMessageByWifibot);
         _streamDataWifibotController.add(dataWifibot);
-        dataWifibot.showData();
+        //dataWifibot.showData();
       });
       while (!_stopGettingDataFromWifiBot) {
         // send "data" so that the wifibot sends back a packet containing information about it

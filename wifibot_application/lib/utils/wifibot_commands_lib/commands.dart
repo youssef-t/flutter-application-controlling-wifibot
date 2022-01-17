@@ -109,8 +109,8 @@ class CommandWifibot {
     // Normalize the speeds
     int rightSpeed = (rightSpeedNotNormalized * upperLimitSpeed).round();
     int leftSpeed = (leftSpeedNotNormalized * upperLimitSpeed).round();
-    print("rightSpeed: $rightSpeed");
-    print("leftSpeed: $leftSpeed");
+    //print("rightSpeed: $rightSpeed");
+    //print("leftSpeed: $leftSpeed");
     _setSpeed(rightSpeed, leftSpeed);
   }
 
