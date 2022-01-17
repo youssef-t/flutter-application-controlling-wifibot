@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
@@ -8,25 +9,27 @@ import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'dart:convert';
 import 'package:sensors_plus/sensors_plus.dart';
 
-
 class ControllerRouteGyroscope extends StatefulWidget {
   @override
-  _ControllerRouteGyroscopeState createState() => _ControllerRouteGyroscopeState();
+  _ControllerRouteGyroscopeState createState() =>
+      _ControllerRouteGyroscopeState();
 }
 
 class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
   late ConnectionTCP _conn;
-  double _xGyroscope = 0;
-  double _yGyroscope = 0;
+  double _xGyroscope = 0.0;
+  double _yGyroscope = 0.0;
   CommandWifibot _commandWifibot = CommandWifibot();
 
   late Timer _timerSendCommand;
 
   @override
   Widget build(BuildContext context) {
-
     gyroscopeEvents.listen((GyroscopeEvent event) {
-      print(event);
+      //print("EVENT : $event");
+      //print('Event executed in ${stopwatch.elapsed}');
+      _xGyroscope += event.x / (2 * pi);
+      _yGyroscope += event.y / (2 * pi);
     });
 
     return _buildView();
@@ -41,7 +44,6 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
         wifiBotTCPPort: WifibotConstants.tcpPortWifibotDefault,
         timeoutDuration: WifibotConstants.timeoutDurationTCPDefault);
     _timerSendCommand = _sendCommandToWifibotFromXAndY();
-
   }
 
   @override
@@ -86,27 +88,39 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
         Container(
           alignment: Alignment.topRight,
           child: StreamBuilder(
-            stream: _conn.streamDataWifibotController.stream.map((event) => json.encode(event.dataWifibotMap)),
+            stream: _conn.streamDataWifibotController.stream
+                .map((event) => json.encode(event.dataWifibotMap)),
             initialData: "No data",
-            builder: (
-                BuildContext context,
-                AsyncSnapshot<dynamic> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               String _textToDisplay = json.encode(snapshot.data);
-              return Text("Wifibot response: $_textToDisplay", style: TextStyle(color: Colors.blue, fontSize: 20),);
-
-
+              return Text(
+                "Wifibot response: $_textToDisplay",
+                style: TextStyle(color: Colors.blue, fontSize: 20),
+              );
             },
-
           ),
         )
       ],
     );
   }
 
+  Timer _sendCommandToWifibotFromXAndY() =>
+      Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+        if (_xGyroscope > 1) {
+          _xGyroscope = 1;
+        } else if (_xGyroscope < -1) {
+          _xGyroscope = -1;
+        }
 
-  Timer _sendCommandToWifibotFromXAndY() => Timer.periodic(const Duration(milliseconds: 160), (timer) {
-      _commandWifibot.setSpeedFromXandY(-_xGyroscope, -_yGyroscope);
-      _conn.sendCommand(_commandWifibot);
-    });
+        if (_yGyroscope > 1) {
+          _yGyroscope = 1;
+        } else if (_yGyroscope < -1) {
+          _yGyroscope = -1;
+        }
 
+        print("x : $_xGyroscope - y : $_yGyroscope");
+
+        _commandWifibot.setSpeedFromXandY(_xGyroscope, _yGyroscope);
+        _conn.sendCommand(_commandWifibot);
+      });
 }

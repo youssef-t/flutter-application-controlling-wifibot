@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../route_generator.dart';
 
 // Defining the style of the buttons
-const fontSizeButton = 30.0;
+const fontSizeButton = 25.0;
 const textButtonStyle = TextStyle(
   fontSize: fontSizeButton,
 );
@@ -31,7 +31,7 @@ class HomeRoute extends StatelessWidget {
       ),
       body: Container(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -79,6 +79,7 @@ class HomeRoute extends StatelessWidget {
                   child: const Center(
                     child: Text(
                       "Test Communication",
+                      style: textButtonStyle,
                     ),
                   ),
                 ),

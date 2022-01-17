@@ -84,6 +84,11 @@ class CommandWifibot {
     double rightSpeedNotNormalized = 0.0;
     double leftSpeedNotNormalized = 0.0;
 
+    // In case we use a square instead of a circle (radius can be higher than 1)
+    if(radius > 1) {
+      radius = 1;
+    }
+
     if( y > 0) {
       if (x > 0) {
         rightSpeedNotNormalized = radius*sin(theta).abs();
@@ -109,8 +114,8 @@ class CommandWifibot {
     // Normalize the speeds
     int rightSpeed = (rightSpeedNotNormalized * upperLimitSpeed).round();
     int leftSpeed = (leftSpeedNotNormalized * upperLimitSpeed).round();
-    //print("rightSpeed: $rightSpeed");
-    //print("leftSpeed: $leftSpeed");
+    print("rightSpeed: $rightSpeed");
+    print("leftSpeed: $leftSpeed");
     _setSpeed(rightSpeed, leftSpeed);
   }
 

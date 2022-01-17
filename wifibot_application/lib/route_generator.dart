@@ -22,8 +22,9 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.home:
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-            overlays: []);
+        //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+          //  overlays: [SystemUiOverlay.top]);
+
         return MaterialPageRoute(
           builder: (_) => HomeRoute(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
