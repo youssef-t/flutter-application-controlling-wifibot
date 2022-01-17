@@ -16,16 +16,19 @@ class ControllerRouteGyroscope extends StatefulWidget {
 
 class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
   late ConnectionTCP _conn;
-  double _xJoystick = 0;
-  double _yJoystick = 0;
-  bool _isJoystickUpdating = false;
+  double _xGyroscope = 0;
+  double _yGyroscope = 0;
   CommandWifibot _commandWifibot = CommandWifibot();
 
   late Timer _timerSendCommand;
-  late Timer _timerUpdateXandY;
 
   @override
   Widget build(BuildContext context) {
+
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      print(event);
+    });
+
     return _buildView();
   }
 
@@ -37,7 +40,6 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
         wifiBotIPAddress: WifibotConstants.wifiBotIPAddressDefault,
         wifiBotTCPPort: WifibotConstants.tcpPortWifibotDefault,
         timeoutDuration: WifibotConstants.timeoutDurationTCPDefault);
-    _timerUpdateXandY = _updateXandYWhenNoValueFromJoystick();
     _timerSendCommand = _sendCommandToWifibotFromXAndY();
 
   }
@@ -45,7 +47,6 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
   @override
   void dispose() {
     _conn.close();
-    _timerUpdateXandY.cancel();
     _timerSendCommand.cancel();
     super.dispose();
   }
@@ -111,30 +112,10 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
     );
   }
 
-  void _updateXandYFromJoystick(x, y) {
-    setState(() {
-      _xJoystick = x;
-      _yJoystick = y;
-      _isJoystickUpdating = true;
-    });
-  }
-
-  Timer _updateXandYWhenNoValueFromJoystick() => Timer.periodic(const Duration(milliseconds: 150), (timer) {
-    setState(() {
-      if (!_isJoystickUpdating) {
-        _xJoystick = 0;
-        _yJoystick = 0;
-      }
-      _isJoystickUpdating = false;
-    });
-  });
-
 
   Timer _sendCommandToWifibotFromXAndY() => Timer.periodic(const Duration(milliseconds: 160), (timer) {
-    setState(() {
-      _commandWifibot.setSpeedFromXandY(-_xJoystick, -_yJoystick);
+      _commandWifibot.setSpeedFromXandY(-_xGyroscope, -_yGyroscope);
       _conn.sendCommand(_commandWifibot);
     });
-  });
 
 }
