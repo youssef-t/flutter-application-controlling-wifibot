@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Wifibot Controller',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.amber,
+        primarySwatch: Colors.blue,
       ),
       // Start the app with the "/" named route. In this case, the app starts
       // on the Home widget.

@@ -17,17 +17,6 @@ class HomeRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Wifibot Controller"),
-        actions: [
-          IconButton(
-              // Go to the settings route
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.settings);
-              },
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.black,
-              ))
-        ],
       ),
       body: Container(
         child: Padding(
