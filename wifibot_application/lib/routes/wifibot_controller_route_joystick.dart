@@ -1,13 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'package:wifibot_application/custom_widgets/custom_joystick.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/commands.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/connection_tcp.dart';
 import 'package:wifibot_application/utils/wifibot_commands_lib/constants_wifibot.dart';
-import 'package:flutter_mjpeg/flutter_mjpeg.dart';
-import 'dart:convert';
-import 'package:sensors_plus/sensors_plus.dart';
 
 class ControllerRouteJoystick extends StatefulWidget {
   @override

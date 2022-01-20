@@ -19,17 +19,21 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
   late ConnectionTCP _conn;
   double _xGyroscope = 0.0;
   double _yGyroscope = 0.0;
+  bool _stop = false;
   CommandWifibot _commandWifibot = CommandWifibot();
 
   late Timer _timerSendCommand;
 
   @override
   Widget build(BuildContext context) {
+    Stopwatch stopwatch = Stopwatch()..start();
     gyroscopeEvents.listen((GyroscopeEvent event) {
       //print("EVENT : $event");
       //print('Event executed in ${stopwatch.elapsed}');
-      _xGyroscope += event.x / (2 * pi);
-      _yGyroscope += event.y / (2 * pi);
+      double timeElapsedInSeconds = stopwatch.elapsedMilliseconds / 1000;
+      _xGyroscope -= event.x * timeElapsedInSeconds / (pi);
+      _yGyroscope += event.y * timeElapsedInSeconds / (pi);
+      stopwatch.reset();
     });
 
     return _buildView();
@@ -99,14 +103,56 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
               );
             },
           ),
+        ),
+        Container(
+          alignment: Alignment.centerRight,
+          child: Material(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.refresh_outlined,
+                  color: Colors.blue,
+                ),
+                onPressed: () {
+                  _xGyroscope = 0;
+                  _yGyroscope = 0;
+                },
+              ),
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Material(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: IconButton(
+                icon: _stop
+                    ? const Icon(
+                        Icons.play_arrow,
+                        color: Colors.green,
+                      )
+                    : const Icon(
+                        Icons.stop,
+                        color: Colors.red,
+                      ),
+                onPressed: () {
+                  setState(() {
+                    _stop ? _stop = false : _stop = true;
+                  });
+                },
+              ),
+            ),
+          ),
         )
       ],
     );
   }
 
   Timer _sendCommandToWifibotFromXAndY() =>
-      Timer.periodic(const Duration(milliseconds: 2000), (timer) {
-        if (_xGyroscope > 1) {
+      Timer.periodic(const Duration(milliseconds: 100), (timer) {
+        /*if (_xGyroscope > 1) {
           _xGyroscope = 1;
         } else if (_xGyroscope < -1) {
           _xGyroscope = -1;
@@ -116,11 +162,14 @@ class _ControllerRouteGyroscopeState extends State<ControllerRouteGyroscope> {
           _yGyroscope = 1;
         } else if (_yGyroscope < -1) {
           _yGyroscope = -1;
-        }
+        }*/
 
         print("x : $_xGyroscope - y : $_yGyroscope");
-
-        _commandWifibot.setSpeedFromXandY(_xGyroscope, _yGyroscope);
+        if (_stop) {
+          _commandWifibot.setSpeedFromXandY(0, 0);
+        } else {
+          _commandWifibot.setSpeedFromXandY(_xGyroscope, _yGyroscope);
+        }
         _conn.sendCommand(_commandWifibot);
       });
 }

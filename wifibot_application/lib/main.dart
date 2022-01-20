@@ -1,12 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:wifibot_application/route_generator.dart';
 import 'package:wifibot_application/utils/orientation_helpers.dart';
-import 'package:wifibot_application/routes/wifibot_controller_route_joystick.dart';
-import 'package:wifibot_application/routes/home_route.dart';
-import 'package:wifibot_application/routes/settings_route.dart';
-
 
 // Variable to store the width of the screen
 double? screenWidth;

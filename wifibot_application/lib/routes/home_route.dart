@@ -16,66 +16,62 @@ class HomeRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Wifibot Controller"),
+        title: const Text("Wifibot Controller"),
       ),
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Spacer(),
-                ElevatedButton(
-                  // Go the controller route
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.controllerJoystick);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity,
-                        50), // double.infinity is the width and 50 is the height
-                  ),
-                  child: const Text(
-                    "Controller with Joystick",
-                    style: textButtonStyle,
-                  ),
-                ),
-                Spacer(),
-                ElevatedButton(
-                  // Go the controller route
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.controllerGyroscope);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity,
-                        50), // double.infinity is the width and 50 is the height
-                  ),
-                  child: const Text(
-                    "Controller with Gyroscope",
-                    style: textButtonStyle,
-                  ),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  // Go the controller route
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.testCommunication);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity,
-                        50), // double.infinity is the width and 50 is the height
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Test Communication",
-                      style: textButtonStyle,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Spacer(),
+            ElevatedButton(
+              // Go the controller route
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.controllerJoystick);
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity,
+                    50), // double.infinity is the width and 50 is the height
+              ),
+              child: const Text(
+                "Controller with Joystick",
+                style: textButtonStyle,
+              ),
             ),
-          ),
+            const Spacer(),
+            ElevatedButton(
+              // Go the controller route
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.controllerGyroscope);
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity,
+                    50), // double.infinity is the width and 50 is the height
+              ),
+              child: const Text(
+                "Controller with Gyroscope",
+                style: textButtonStyle,
+              ),
+            ),
+            const Spacer(),
+            ElevatedButton(
+              // Go the controller route
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.testCommunication);
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity,
+                    50), // double.infinity is the width and 50 is the height
+              ),
+              child: const Center(
+                child: Text(
+                  "Test Communication",
+                  style: textButtonStyle,
+                ),
+              ),
+            ),
+            const Spacer(),
+          ],
         ),
       ),
     );
